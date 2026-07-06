@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeOwl · Lição 10 · HTML Fundamentos</title>
+    <style>
+        :root {
+            --green: #58CC02;
+            --green-dark: #46A302;
+            --blue: #1CB0F6;
+            --red: #FF4B4B;
+            --bg: #f0f4f8;
+            --card: #fff;
+            --text: #3c3c3c;
+            --text-light: #777;
+            --shadow: 0 4px 0 #ddd;
+            --radius: 18px;
+            --font: 'Segoe UI', 'Nunito', system-ui, -apple-system, sans-serif;
+            --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            background-image:
+                radial-gradient(circle at 20% 10%, #e8f5e9 0%, transparent 40%),
+                radial-gradient(circle at 80% 90%, #e3f2fd 0%, transparent 40%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .lesson-container {
+            width: 100%;
+            max-width: 480px;
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0, 0, 0, 0.05);
+            padding: 20px 22px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            position: relative;
+            animation: fadeSlideIn 0.4s ease;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.08);
+            }
+            70% {
+                transform: scale(0.95);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            20% {
+                transform: translateX(-8px);
+            }
+            40% {
+                transform: translateX(8px);
+            }
+            60% {
+                transform: translateX(-6px);
+            }
+            80% {
+                transform: translateX(4px);
+            }
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-40px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(380px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .header-exercise {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #aaa;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            line-height: 1;
+            text-decoration: none;
+        }
+        .btn-close:hover {
+            color: #555;
+            background: #f0f0f0;
+        }
+        .progress-wrap {
+            flex: 1;
+            height: 12px;
+            background: #e8e8e8;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--green);
+            border-radius: 8px;
+            transition: width 0.4s ease;
+        }
+        .hearts-row {
+            display: flex;
+            gap: 3px;
+            font-size: 1.3em;
+        }
+        .heart {
+            transition: all 0.3s;
+        }
+        .heart.lost {
+            opacity: 0.3;
+            transform: scale(0.7);
+            filter: grayscale(1);
+        }
+
+        .mascot-area {
+            text-align: center;
+            font-size: 55px;
+            line-height: 1;
+            margin: 2px 0;
+            transition: all 0.3s;
+        }
+        .mascot-area.happy {
+            animation: bounceIn 0.5s ease;
+        }
+        .mascot-area.sad {
+            animation: shake 0.4s ease;
+        }
+
+        .question-box {
+            background: #fafafa;
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            border: 2px solid #eee;
+            text-align: center;
+            min-height: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .question-text {
+            font-size: 1.05em;
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.4;
+        }
+        .code-snippet {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            font-family: var(--font-mono);
+            font-size: 0.85em;
+            padding: 10px 14px;
+            border-radius: 8px;
+            text-align: left;
+            width: 100%;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            letter-spacing: 0.3px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 4px 0;
+        }
+        .option-btn {
+            background: #fff;
+            border: 2.5px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 14px 10px;
+            font-family: var(--font);
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 3px 0 #d8d8d8;
+            color: var(--text);
+            text-align: center;
+            word-break: break-word;
+        }
+        .option-btn:hover {
+            border-color: #b0b0b0;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 0 #c8c8c8;
+        }
+        .option-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #d0d0d0;
+        }
+        .option-btn.selected {
+            border-color: var(--blue);
+            background: #e8f6ff;
+            box-shadow: 0 3px 0 #b0d8f0;
+        }
+        .option-btn.correct {
+            border-color: var(--green) !important;
+            background: #e0fad0 !important;
+            box-shadow: 0 3px 0 #a0d880 !important;
+            animation: pulse 0.4s ease;
+            pointer-events: none;
+        }
+        .option-btn.wrong {
+            border-color: var(--red) !important;
+            background: #ffe0e0 !important;
+            box-shadow: 0 3px 0 #e0a0a0 !important;
+            animation: shake 0.5s ease;
+            pointer-events: none;
+        }
+        .option-btn:disabled {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .btn-check {
+            width: 100%;
+            padding: 14px;
+            font-size: 1em;
+            border-radius: 50px;
+            background: var(--blue);
+            color: #fff;
+            border: none;
+            box-shadow: 0 4px 0 #1488c0;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: var(--font);
+            letter-spacing: 0.3px;
+            transition: all 0.15s ease;
+        }
+        .btn-check:hover {
+            background: #1da0e0;
+            box-shadow: 0 5px 0 #1278a8;
+            transform: translateY(-1px);
+        }
+        .btn-check:active {
+            box-shadow: 0 2px 0 #1278a8;
+            transform: translateY(2px);
+        }
+        .btn-check:disabled {
+            background: #ccc;
+            box-shadow: 0 3px 0 #aaa;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .feedback-text {
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.95em;
+            min-height: 24px;
+            transition: all 0.3s;
+        }
+        .feedback-text.correct {
+            color: var(--green-dark);
+        }
+        .feedback-text.wrong {
+            color: var(--red);
+        }
+
+        .confetti-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 10;
+            border-radius: 24px;
+        }
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            animation: confetti-fall 2.5s ease-out forwards;
+        }
+
+        @media (max-width: 420px) {
+            .lesson-container {
+                padding: 14px 16px 18px;
+                border-radius: 18px;
+            }
+            .options-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            .question-text {
+                font-size: 0.95em;
+            }
+            .option-btn {
+                font-size: 0.85em;
+                padding: 12px 8px;
+            }
+            .mascot-area {
+                font-size: 44px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="lesson-container" id="lessonContainer">
+        <!-- Confetes (ocultos por padrão) -->
+        <div class="confetti-container" id="confettiBox"></div>
+
+        <!-- Cabeçalho -->
+        <div class="header-exercise">
+            <a class="btn-close" href="index.html" title="Voltar para o menu">✕</a>
+            <div class="progress-wrap">
+                <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+            </div>
+            <div class="hearts-row" id="heartsRow"></div>
+        </div>
+
+        <!-- Mascote -->
+        <div class="mascot-area" id="mascotDisplay">🦉</div>
+
+        <!-- Pergunta -->
+        <div class="question-box">
+            <p class="question-text" id="questionDisplay"></p>
+            <div id="codeArea"></div>
+        </div>
+
+        <!-- Opções -->
+        <div class="options-grid" id="optionsGrid"></div>
+
+        <!-- Feedback -->
+        <p class="feedback-text" id="feedbackMessage"></p>
+
+        <!-- Botão verificar -->
+        <button class="btn-check" id="btnCheck" disabled>✓ Verificar</button>
+    </div>
+
+    <script>
+        (function() {
+            // ============ DADOS DA LIÇÃO ============
+            const LESSON_XP = 30;
+            const exercises = [{
+                question: 'Qual tag HTML é usada para criar o título principal de uma página?',
+                options: ['<h1>', '<p>', '<title>', '<header>'],
+                correct: 0,
+                codeSnippet: null,
+            }, {
+                question: 'Qual tag cria um parágrafo de texto?',
+                options: ['<text>', '<para>', '<p>', '<span>'],
+                correct: 2,
+                codeSnippet: null,
+            }, {
+                question: 'Complete o código para criar um link:',
+                options: ['<link>', '<a>', '<url>', '<href>'],
+                correct: 1,
+                codeSnippet: '<___ href="https://exemplo.com">Clique aqui</___>',
+            }, {
+                question: 'Qual atributo da tag <img> define o caminho da imagem?',
+                options: ['href', 'src', 'alt', 'path'],
+                correct: 1,
+                codeSnippet: '<img ___="foto.jpg" alt="Minha foto">',
+            }, {
+                question: 'Qual tag HTML é usada para agrupar elementos em bloco?',
+                options: ['<span>', '<group>', '<div>', '<block>'],
+                correct: 2,
+                codeSnippet: null,
+            }];
+
+            // ============ ESTADO ============
+            const totalExercises = exercises.length;
+            let currentIndex = 0;
+            let hearts = 5;
+            const maxHearts = 5;
+            let selectedOption = null;
+            let isAnswerChecked = false;
+            let streakCount = 0;
+
+            // ============ ELEMENTOS DOM ============
+            const progressFill = document.getElementById('progressFill');
+            const heartsRow = document.getElementById('heartsRow');
+            const mascotDisplay = document.getElementById('mascotDisplay');
+            const questionDisplay = document.getElementById('questionDisplay');
+            const codeArea = document.getElementById('codeArea');
+            const optionsGrid = document.getElementById('optionsGrid');
+            const feedbackMessage = document.getElementById('feedbackMessage');
+            const btnCheck = document.getElementById('btnCheck');
+            const confettiBox = document.getElementById('confettiBox');
+
+            // ============ SOM COM WEB AUDIO API ============
+            let audioCtx = null;
+
+            function getAudio() {
+                if (!audioCtx) audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                return audioCtx;
+            }
+
+            function playTone(freq, duration, type = 'sine', vol = 0.12) {
+                try {
+                    const ctx = getAudio();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                    gain.gain.setValueAtTime(vol, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + duration);
+                } catch (e) {}
+            }
+
+            function sfxCorrect() {
+                playTone(660, 0.1, 'sine', 0.15);
+                setTimeout(() => playTone(880, 0.12, 'sine', 0.18), 80);
+            }
+
+            function sfxWrong() {
+                playTone(180, 0.25, 'triangle', 0.18);
+                setTimeout(() => playTone(140, 0.3, 'triangle', 0.15), 120);
+            }
+
+            function sfxClick() {
+                playTone(520, 0.05, 'sine', 0.07);
+            }
+
+            function sfxComplete() {
+                [523, 659, 784, 1047].forEach((f, i) => {
+                    setTimeout(() => playTone(f, 0.18, 'triangle', 0.14), i * 100);
+                });
+            }
+
+            // ============ CONFETES ============
+            function spawnConfetti(count = 35) {
+                const colors = ['#58CC02', '#FF4B4B', '#1CB0F6', '#FF9600', '#A568F0', '#FFD700', '#FF69B4',
+                '#00CED1'];
+                confettiBox.innerHTML = '';
+                for (let i = 0; i < count; i++) {
+                    const piece = document.createElement('div');
+                    piece.className = 'confetti-piece';
+                    piece.style.left = Math.random() * 100 + '%';
+                    piece.style.top = -(Math.random() * 30 + 10) + 'px';
+                    piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    piece.style.width = (Math.random() * 8 + 5) + 'px';
+                    piece.style.height = (Math.random() * 8 + 5) + 'px';
+                    piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    piece.style.animationDelay = Math.random() * 0.5 + 's';
+                    confettiBox.appendChild(piece);
+                }
+                setTimeout(() => { confettiBox.innerHTML = ''; }, 3000);
+            }
+
+            // ============ RENDERIZAR EXERCÍCIO ============
+            function renderHearts() {
+                heartsRow.innerHTML = '';
+                for (let i = 0; i < maxHearts; i++) {
+                    const span = document.createElement('span');
+                    span.className = 'heart' + (i >= hearts ? ' lost' : '');
+                    span.textContent = i < hearts ? '❤️' : '🖤';
+                    heartsRow.appendChild(span);
+                }
+            }
+
+            function loadExercise() {
+                if (currentIndex >= totalExercises) {
+                    completeLesson();
+                    return;
+                }
+                const ex = exercises[currentIndex];
+                // Reset
+                selectedOption = null;
+                isAnswerChecked = false;
+                feedbackMessage.textContent = '';
+                feedbackMessage.className = 'feedback-text';
+                btnCheck.disabled = true;
+                btnCheck.textContent = '✓ Verificar';
+                mascotDisplay.textContent = '🦉';
+                mascotDisplay.className = 'mascot-area';
+
+                // Progresso
+                const progressPercent = (currentIndex / totalExercises) * 100;
+                progressFill.style.width = progressPercent + '%';
+
+                // Corações
+                renderHearts();
+
+                // Pergunta
+                questionDisplay.textContent = ex.question;
+
+                // Código (se houver)
+                codeArea.innerHTML = '';
+                if (ex.codeSnippet) {
+                    const pre = document.createElement('pre');
+                    pre.className = 'code-snippet';
+                    pre.textContent = ex.codeSnippet;
+                    codeArea.appendChild(pre);
+                }
+
+                // Opções
+                optionsGrid.innerHTML = '';
+                ex.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.textContent = opt;
+                    btn.addEventListener('click', () => selectOption(idx, btn));
+                    optionsGrid.appendChild(btn);
+                });
+            }
+
+            function selectOption(index, btnElement) {
+                if (isAnswerChecked) return;
+                sfxClick();
+                selectedOption = index;
+                document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+                btnElement.classList.add('selected');
+                btnCheck.disabled = false;
+                btnCheck.textContent = '✓ Verificar';
+                feedbackMessage.textContent = '';
+                feedbackMessage.className = 'feedback-text';
+            }
+
+            // ============ VERIFICAR RESPOSTA ============
+            function checkAnswer() {
+                if (isAnswerChecked || selectedOption === null) return;
+                const ex = exercises[currentIndex];
+                isAnswerChecked = true;
+                const isCorrect = (selectedOption === ex.correct);
+                const allBtns = document.querySelectorAll('.option-btn');
+                const selectedBtn = allBtns[selectedOption];
+                const correctBtn = allBtns[ex.correct];
+
+                if (correctBtn) correctBtn.classList.add('correct');
+                if (selectedBtn && !isCorrect) selectedBtn.classList.add('wrong');
+
+                allBtns.forEach(b => b.disabled = true);
+                btnCheck.disabled = true;
+
+                if (isCorrect) {
+                    sfxCorrect();
+                    streakCount++;
+                    feedbackMessage.textContent = '✅ Correto! Muito bem!';
+                    feedbackMessage.className = 'feedback-text correct';
+                    mascotDisplay.textContent = '😊';
+                    mascotDisplay.className = 'mascot-area happy';
+                    btnCheck.textContent = '✨ Ótimo!';
+                } else {
+                    sfxWrong();
+                    hearts--;
+                    streakCount = 0;
+                    feedbackMessage.textContent = '❌ Ops! A resposta correta está destacada em verde.';
+                    feedbackMessage.className = 'feedback-text wrong';
+                    mascotDisplay.textContent = '😢';
+                    mascotDisplay.className = 'mascot-area sad';
+                    btnCheck.textContent = '😔 Não foi dessa vez';
+                    renderHearts();
+                }
+
+                // Verificar game over
+                if (hearts <= 0) {
+                    setTimeout(() => {
+                        // Redirecionar de volta sem XP
+                        window.location.href = 'index.html?failed=10';
+                    }, 1200);
+                    return;
+                }
+
+                // Próximo exercício
+                setTimeout(() => {
+                    currentIndex++;
+                    loadExercise();
+                }, 1400);
+            }
+
+            // ============ COMPLETAR LIÇÃO ============
+            function completeLesson() {
+                sfxComplete();
+                spawnConfetti(45);
+                // Redirecionar para index com parâmetros de sucesso
+                setTimeout(() => {
+                    window.location.href = 'index.html?completed=10&xp=' + LESSON_XP;
+                }, 1800);
+            }
+
+            // ============ EVENTOS ============
+            btnCheck.addEventListener('click', checkAnswer);
+
+            // Interação com a coruja
+            mascotDisplay.addEventListener('click', () => {
+                playTone(350, 0.2, 'sine', 0.08);
+                setTimeout(() => playTone(420, 0.25, 'sine', 0.1), 150);
+                mascotDisplay.style.transform = 'scale(1.2)';
+                setTimeout(() => { mascotDisplay.style.transform = ''; }, 200);
+            });
+
+            // ============ INICIAR ============
+            loadExercise();
+        })();
+    </script>
+</body>
+</html>
